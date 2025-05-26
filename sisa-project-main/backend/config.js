@@ -6,8 +6,15 @@ const dbUrl = process.env.DATABASE_URL || "mysql://root:hhFqazJCMYAIkiqxEhkfIpFD
 // Debug: log das variáveis de ambiente usadas na conexão
 console.log('DB_URL:', dbUrl);
 
-const sequelize = new Sequelize(dbUrl, {
-  dialect: "mysql",
+const [protocol, , credentialsAndHost, portAndDatabase] = dbUrl.split(/[:@/]+/);
+const [username, password] = credentialsAndHost.split(':');
+const [host, port] = portAndDatabase.split(':');
+const database = portAndDatabase.split('/')[1];
+
+const sequelize = new Sequelize(database, username, password, {
+  host,
+  port,
+  dialect: protocol,
   logging: false,
   
   // Configurações de pool para melhor gerenciamento de conexões
