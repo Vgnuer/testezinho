@@ -17,7 +17,7 @@ export default function Login() {
     console.log("Tentativa de login com:", { email, password });
 
     try {
-      const res = await API.post("/auth/login", { email, password });
+      const res = await API.post("https://testezinho-sm9u.onrender.com/api/auth/login", { email, password });
       console.log("Resposta do login:", res.data);
 
       if (res.data && res.data.token) {
