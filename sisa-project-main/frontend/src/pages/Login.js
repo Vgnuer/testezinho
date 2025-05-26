@@ -14,16 +14,23 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    console.log("Tentativa de login com:", { email, password });
+
     try {
       const res = await API.post("/auth/login", { email, password });
+      console.log("Resposta do login:", res.data);
+
       if (res.data && res.data.token) {
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("occupation_id", res.data.user.occupation_id);
         navigate("/dashboard");
       } else {
+        console.warn("Resposta inesperada no login:", res.data);
         alert("Erro: Dados de login inválidos");
       }
     } catch (error) {
+      console.error("Erro no login:", error);
+      
       const mensagemErro = error.response?.data?.error || "Ocorreu um erro ao tentar fazer login. Por favor, tente novamente.";
       console.error("Erro no login:", mensagemErro);
       

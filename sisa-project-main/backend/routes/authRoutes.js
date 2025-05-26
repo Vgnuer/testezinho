@@ -8,9 +8,11 @@ const router = express.Router();
 
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  
+  console.log("Tentativa de login recebida:", { email });
+
   try {
     if (!email || !password) {
+      console.warn("Campos obrigatórios ausentes:", { email, password });
       return res.status(400).json({ error: "Email e senha são obrigatórios" });
     }
 
@@ -22,12 +24,14 @@ router.post("/login", async (req, res) => {
     const user = await User.findOne({ where: { email } });
     
     if (!user) {
+      console.warn("Usuário não encontrado:", email);
       return res.status(401).json({ error: "Email não cadastrado" });
     }
 
     const valid = await bcrypt.compare(password, user.password);
     
     if (!valid) {
+      console.warn("Senha incorreta para o email:", email);
       return res.status(403).json({ error: "Senha incorreta" });
     }
 
@@ -37,7 +41,7 @@ router.post("/login", async (req, res) => {
       { expiresIn: '24h' }
     );
 
-    console.log(`Login bem sucedido para: ${email}`);
+    console.log("Login bem-sucedido para o usuário:", email);
     res.json({ 
       token, 
       user: {

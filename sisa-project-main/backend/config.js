@@ -38,6 +38,13 @@ const sequelize = new Sequelize(dbUrl, {
   }
 });
 
+// Debug: log das configurações de conexão
+console.log('Tentando conectar ao banco com as seguintes configurações:');
+console.log('Host:', sequelize.options.host);
+console.log('Database:', sequelize.options.database);
+console.log('Username:', sequelize.options.username);
+console.log('Dialect:', sequelize.options.dialect);
+
 // Função para testar a conexão com retry
 async function connectWithRetry(retries = 3) {
   for (let i = 0; i < retries; i++) {
@@ -53,6 +60,7 @@ async function connectWithRetry(retries = 3) {
       
     } catch (error) {
       console.error(`❌ Erro na tentativa ${i + 1}:`, error.message);
+      console.error('Detalhes do erro:', error);
       
       if (i === retries - 1) {
         console.error('🚨 Todas as tentativas de conexão falharam!');
