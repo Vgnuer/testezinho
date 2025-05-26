@@ -12,20 +12,80 @@ const sequelize = new Sequelize(
   process.env.DB_USER,
   process.env.DB_PASSWORD,
   {
-    host: "interchange.proxy.rlwy.net", // alterado para o novo host
-    port: process.env.DB_PORT, // adicione esta linha
+    host: process.env.DB_HOST, // Use a variável de ambiente
+    port: process.env.DB_PORT || 3306,
     dialect: "mysql",
     logging: false,
+    
+    // Configurações de pool para melhor gerenciamento de conexões
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000
+    },
+    
+    // Configurações de timeout
+    dialectOptions: {
+      connectTimeout: 60000, // 60 segundos
+      acquireTimeout: 60000,
+      timeout: 60000,
+      // SSL para Railway
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      }
+    },
+    
     define: {
       timestamps: true
+    },
+    
+    // Retry automático
+    retry: {
+      max: 3
     }
   }
 );
 
-sequelize.authenticate()
-  .then(() => sequelize.sync({ alter: true }))
-  .catch(err => {
-    console.error('Erro ao conectar/sincronizar o banco de dados:', err);
-  });
+// Função para testar a conexão com retry
+async function connectWithRetry(retries = 3) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      console.log(`Tentativa ${i + 1} de conexão com o banco...`);
+      await sequelize.authenticate();
+      console.log('✅ Conexão com banco de dados estabelecida com sucesso!');
+      
+      // NÃO sincronizar automaticamente - o schema já existe
+      // await sequelize.sync({ alter: true });
+      console.log('✅ Usando schema existente do banco!');
+      return;
+      
+    } catch (error) {
+      console.error(`❌ Erro na tentativa ${i + 1}:`, error.message);
+      
+      if (i === retries - 1) {
+        console.error('🚨 Todas as tentativas de conexão falharam!');
+        console.error('Verifique:');
+        console.error('1. Se as variáveis de ambiente estão corretas');
+        console.error('2. Se o banco de dados está acessível');
+        console.error('3. Se as credenciais estão válidas');
+        console.error('4. Se o firewall permite a conexão');
+        throw error;
+      }
+      
+      // Aguardar antes da próxima tentativa
+      const delay = Math.pow(2, i) * 1000; // Exponential backoff
+      console.log(`⏳ Aguardando ${delay}ms antes da próxima tentativa...`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+}
+
+// Iniciar conexão
+connectWithRetry().catch(err => {
+  console.error('💥 Falha crítica na conexão:', err);
+  process.exit(1);
+});
 
 module.exports = sequelize;
