@@ -24,21 +24,21 @@ export default function Login() {
         alert("Erro: Dados de login inválidos");
       }
     } catch (error) {
-      const mensagemErro = error.response?.data?.error || "Erro desconhecido";
+      const mensagemErro = error.response?.data?.error || "Ocorreu um erro ao tentar fazer login. Por favor, tente novamente.";
       console.error("Erro no login:", mensagemErro);
       
       switch(error.response?.status) {
         case 400:
-          alert("Por favor, preencha todos os campos");
+          alert("Por favor, preencha todos os campos corretamente");
           break;
         case 401:
-          alert("Usuário não encontrado");
+          alert("Usuário não encontrado. Verifique seu email");
           break;
         case 403:
-          alert("Senha incorreta");
+          alert("Senha incorreta. Por favor, tente novamente");
           break;
         default:
-          alert(`Erro no login: ${mensagemErro}`);
+          alert(`Não foi possível realizar o login: ${mensagemErro}`);
       }
     }
   };
