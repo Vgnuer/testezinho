@@ -32,13 +32,13 @@ export default function Login() {
           alert("Por favor, preencha todos os campos corretamente");
           break;
         case 401:
-          alert("Usuário não encontrado. Verifique seu email");
+          alert("Email não cadastrado. Por favor, verifique o email informado ou registre-se.");
           break;
         case 403:
-          alert("Senha incorreta. Por favor, tente novamente");
+          alert("Senha incorreta. Por favor, verifique a senha e tente novamente.");
           break;
         default:
-          alert(`Não foi possível realizar o login: ${mensagemErro}`);
+          alert("Não foi possível realizar o login: Credenciais inválidas. Por favor, verifique seu email e senha.");
       }
     }
   };

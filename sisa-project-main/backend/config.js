@@ -20,10 +20,8 @@ const sequelize = new Sequelize(dbUrl, {
   
   // Configurações de timeout
   dialectOptions: {
-    connectTimeout: 60000, // 60 segundos
-    acquireTimeout: 60000,
-    timeout: 60000,
-    // SSL para Railway
+    // Remove invalid options
+    connectTimeout: 60000,
     ssl: {
       require: true,
       rejectUnauthorized: false
