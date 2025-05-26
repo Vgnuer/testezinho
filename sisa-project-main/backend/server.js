@@ -73,19 +73,24 @@ app.get("/api/test", (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 // Função para tentar iniciar o servidor em diferentes portas
-const startServer = (port) => {
+function startServer(port) {
+  if (port >= 65536) {
+    console.error(`Port ${port} exceeds the valid range (0–65535).`);
+    process.exit(1);
+  }
+
   app.listen(port, () => {
     console.log(`Server running on port ${port}`);
     console.log(`API URL: https://localhost:${port}/api`);
     console.log(`Test URL: https://localhost:${port}/api/test`);
   }).on('error', (err) => {
     if (err.code === 'EADDRINUSE') {
-      console.log(`Porta ${port} em uso, tentando porta ${port + 1}`);
+      console.log(`Port ${port} in use, trying port ${port + 1}`);
       startServer(port + 1);
     } else {
-      console.error('Erro ao iniciar o servidor:', err);
+      console.error('Error starting server:', err);
     }
   });
-};
+}
 
 startServer(PORT_HTTP);

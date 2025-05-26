@@ -1,7 +1,7 @@
 const { Sequelize } = require("sequelize");
 require("dotenv").config();
 
-const dbUrl = "mysql://root:hhFqazJCMYAIkiqxEhkfIpFDgpQUMXYd@interchange.proxy.rlwy.net:14848/railway";
+const dbUrl = process.env.DATABASE_URL || "mysql://root:hhFqazJCMYAIkiqxEhkfIpFDgpQUMXYd@interchange.proxy.rlwy.net:14848/railway";
 
 // Debug: log das variáveis de ambiente usadas na conexão
 console.log('DB_URL:', dbUrl);

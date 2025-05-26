@@ -56,10 +56,11 @@ npm install
 #### Crie o arquivo `.env`:
 
 ```env
-DB_HOST=localhost
+DB_HOST=interchange.proxy.rlwy.net
 DB_USER=root
-DB_PASSWORD=sua_senha
-DB_NAME=sisa
+DB_PASSWORD=hhFqazJCMYAIkiqxEhkfIpFDgpQUMXYd
+DB_NAME=railway
+DB_PORT=14848
 JWT_SECRET=segredo_super_secreto
 ```
 
