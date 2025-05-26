@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: process.env.REACT_APP_API || 'https://testezinho-8exb.onrender.com/api',
+  baseURL: 'https://testezinho-sm9u.onrender.com/api',
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'

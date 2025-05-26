@@ -1,52 +1,44 @@
 const { Sequelize } = require("sequelize");
 require("dotenv").config();
 
-// Debug: log das variáveis de ambiente usadas na conexão
-console.log('DB_HOST:', process.env.DB_HOST);
-console.log('DB_PORT:', process.env.DB_PORT);
-console.log('DB_USER:', process.env.DB_USER);
-console.log('DB_NAME:', process.env.DB_NAME);
+const dbUrl = "mysql://root:hhFqazJCMYAIkiqxEhkfIpFDgpQUMXYd@interchange.proxy.rlwy.net:14848/railway";
 
-const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
-  {
-    host: process.env.DB_HOST, // Use a variável de ambiente
-    port: process.env.DB_PORT || 3306,
-    dialect: "mysql",
-    logging: false,
-    
-    // Configurações de pool para melhor gerenciamento de conexões
-    pool: {
-      max: 5,
-      min: 0,
-      acquire: 30000,
-      idle: 10000
-    },
-    
-    // Configurações de timeout
-    dialectOptions: {
-      connectTimeout: 60000, // 60 segundos
-      acquireTimeout: 60000,
-      timeout: 60000,
-      // SSL para Railway
-      ssl: {
-        require: true,
-        rejectUnauthorized: false
-      }
-    },
-    
-    define: {
-      timestamps: true
-    },
-    
-    // Retry automático
-    retry: {
-      max: 3
+// Debug: log das variáveis de ambiente usadas na conexão
+console.log('DB_URL:', dbUrl);
+
+const sequelize = new Sequelize(dbUrl, {
+  dialect: "mysql",
+  logging: false,
+  
+  // Configurações de pool para melhor gerenciamento de conexões
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
+  },
+  
+  // Configurações de timeout
+  dialectOptions: {
+    connectTimeout: 60000, // 60 segundos
+    acquireTimeout: 60000,
+    timeout: 60000,
+    // SSL para Railway
+    ssl: {
+      require: true,
+      rejectUnauthorized: false
     }
+  },
+  
+  define: {
+    timestamps: true
+  },
+  
+  // Retry automático
+  retry: {
+    max: 3
   }
-);
+});
 
 // Função para testar a conexão com retry
 async function connectWithRetry(retries = 3) {

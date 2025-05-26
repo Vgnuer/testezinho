@@ -10,15 +10,28 @@ router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   
   try {
+    if (!email || !password) {
+      return res.status(400).json({ error: "Email e senha são obrigatórios" });
+    }
+
     if (!process.env.JWT_SECRET) {
+      console.error("JWT_SECRET não configurado");
       return res.status(500).json({ error: "Erro de configuração do servidor" });
     }
 
     const user = await User.findOne({ where: { email } });
-    if (!user) return res.status(401).json({ error: "Usuário não encontrado" });
+    
+    if (!user) {
+      console.log(`Tentativa de login com email não encontrado: ${email}`);
+      return res.status(401).json({ error: "Usuário não encontrado" });
+    }
 
     const valid = await bcrypt.compare(password, user.password);
-    if (!valid) return res.status(403).json({ error: "Senha incorreta" });
+    
+    if (!valid) {
+      console.log(`Senha incorreta para o usuário: ${email}`);
+      return res.status(403).json({ error: "Senha incorreta" });
+    }
 
     const token = jwt.sign(
       { id: user.id, occupation_id: user.occupation_id }, 
@@ -26,8 +39,19 @@ router.post("/login", async (req, res) => {
       { expiresIn: '24h' }
     );
 
-    res.json({ token, user });
+    console.log(`Login bem sucedido para: ${email}`);
+    res.json({ 
+      token, 
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        occupation_id: user.occupation_id
+      }
+    });
+
   } catch (error) {
+    console.error("Erro no login:", error);
     res.status(500).json({ 
       error: "Erro interno do servidor",
       details: error.message 
