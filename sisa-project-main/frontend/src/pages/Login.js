@@ -30,10 +30,15 @@ export default function Login() {
       }
     } catch (error) {
       console.error("Erro no login:", error);
-      
+
       const mensagemErro = error.response?.data?.error || "Ocorreu um erro ao tentar fazer login. Por favor, tente novamente.";
       console.error("Erro no login:", mensagemErro);
-      
+
+      console.log("Detalhes do erro:", {
+        status: error.response?.status,
+        data: error.response?.data,
+      });
+
       switch(error.response?.status) {
         case 400:
           alert("Por favor, preencha todos os campos corretamente");
