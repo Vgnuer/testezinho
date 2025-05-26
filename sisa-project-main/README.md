@@ -4,6 +4,19 @@ Sistema de gerenciamento com múltiplos perfis de usuários: administradores, co
 
 ---
 
+## 🟢 Backend pronto!
+
+O backend já está rodando e acessível em:  
+https://testezinho-8exb.onrender.com
+
+Se você acessar esse endereço e visualizar a mensagem "SISA API is running", significa que o backend está funcionando corretamente.
+
+---
+
+## 🖥️ Próximo passo: rodar o frontend
+
+Agora, basta seguir as instruções abaixo para rodar o frontend localmente e conectar com o backend.
+
 ## 📦 Tecnologias utilizadas
 
 ### Back-end
