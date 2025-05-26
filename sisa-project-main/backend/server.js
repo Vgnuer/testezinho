@@ -32,12 +32,6 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-const options = {
-  key: fs.readFileSync('./cert/key.pem'),
-  cert: fs.readFileSync('./cert/cert.pem')
-};
-
-// Configuração CORS mais detalhada
 app.use(cors({
   origin: ['https://localhost:3000', 'https://127.0.0.1:3000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
