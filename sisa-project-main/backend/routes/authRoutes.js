@@ -22,14 +22,12 @@ router.post("/login", async (req, res) => {
     const user = await User.findOne({ where: { email } });
     
     if (!user) {
-      console.log(`Tentativa de login com email não encontrado: ${email}`);
-      return res.status(401).json({ error: "Usuário não encontrado" });
+      return res.status(401).json({ error: "Email não cadastrado" });
     }
 
     const valid = await bcrypt.compare(password, user.password);
     
     if (!valid) {
-      console.log(`Senha incorreta para o usuário: ${email}`);
       return res.status(403).json({ error: "Senha incorreta" });
     }
 

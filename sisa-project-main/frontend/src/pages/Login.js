@@ -21,15 +21,25 @@ export default function Login() {
         localStorage.setItem("occupation_id", res.data.user.occupation_id);
         navigate("/dashboard");
       } else {
-        alert("Erro: Resposta inválida do servidor");
+        alert("Erro: Dados de login inválidos");
       }
     } catch (error) {
-      console.error("Erro detalhado:", {
-        message: error.message,
-        response: error.response?.data,
-        status: error.response?.status
-      });
-      alert(error.response?.data?.error || "Erro ao fazer login: Verifique suas credenciais");
+      const mensagemErro = error.response?.data?.error || "Erro desconhecido";
+      console.error("Erro no login:", mensagemErro);
+      
+      switch(error.response?.status) {
+        case 400:
+          alert("Por favor, preencha todos os campos");
+          break;
+        case 401:
+          alert("Usuário não encontrado");
+          break;
+        case 403:
+          alert("Senha incorreta");
+          break;
+        default:
+          alert(`Erro no login: ${mensagemErro}`);
+      }
     }
   };
 
