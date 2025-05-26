@@ -6,3 +6,10 @@ import './styles/global.css';
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<App />);   
+
+
+// fodase, teste maligno foda-se fodasee fodase fodase
+// fodase, teste maligno foda-se fodasee fodase fodase
+// fodase, teste maligno foda-se fodasee fodase fodase
+// fodase, teste maligno foda-se fodasee fodase fodase
+// fodase, teste maligno foda-se fodasee fodase fodase                      
