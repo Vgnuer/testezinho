@@ -3,13 +3,14 @@ require("dotenv").config();
 
 const dbUrl = process.env.DATABASE_URL || "mysql://root:hhFqazJCMYAIkiqxEhkfIpFDgpQUMXYd@interchange.proxy.rlwy.net:14848/railway";
 
-// Debug: log das variáveis de ambiente usadas na conexão
-console.log('DB_URL:', dbUrl);
-
-const [protocol, , credentialsAndHost, portAndDatabase] = dbUrl.split(/[:@/]+/);
-const [username, password] = credentialsAndHost.split(':');
-const [host, port] = portAndDatabase.split(':');
-const database = portAndDatabase.split('/')[1];
+// Parse the DB_URL using URL API
+const url = new URL(dbUrl);
+const protocol = url.protocol.replace(":", "");
+const username = url.username;
+const password = url.password;
+const host = url.hostname;
+const port = url.port;
+const database = url.pathname.replace("/", "");
 
 const sequelize = new Sequelize(database, username, password, {
   host,
