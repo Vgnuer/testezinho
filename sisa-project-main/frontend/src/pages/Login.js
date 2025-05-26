@@ -16,13 +16,20 @@ export default function Login() {
     e.preventDefault();
     try {
       const res = await API.post("/auth/login", { email, password });
-      console.log(res.data);
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("occupation_id", res.data.user.occupation_id);
-      navigate("/dashboard");
+      if (res.data && res.data.token) {
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("occupation_id", res.data.user.occupation_id);
+        navigate("/dashboard");
+      } else {
+        alert("Erro: Resposta inválida do servidor");
+      }
     } catch (error) {
-      console.error("Erro detalhado:", error.response?.data || error.message);
-      alert(error.response?.data?.error || "Erro ao fazer login");
+      console.error("Erro detalhado:", {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
+      alert(error.response?.data?.error || "Erro ao fazer login: Verifique suas credenciais");
     }
   };
 
